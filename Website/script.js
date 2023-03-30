@@ -117,6 +117,9 @@ function DataSection_Product(inputSearch,pageeno,res) {
             div_element = document.createElement("div");
             div_element.setAttribute("class", "pro");
 
+            img_element = document.createElement("img");
+            img_element.setAttribute("src", data[ind].productImage);
+            div_element.appendChild(img_element);
             div_name = document.createElement("div");
             div_name.setAttribute("class", "des");
 
