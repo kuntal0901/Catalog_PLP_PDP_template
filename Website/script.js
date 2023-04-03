@@ -37,6 +37,7 @@ function catalogueView(inputSearch,pageno,filter) {
     fetch("https://pim.unbxd.io/peppercorn/api/v2/catalogueView/6391b1448f93e67002742cef", requestOptions)
         .then(response => response.json())
         .then(result => {
+            console.log(result["facets"])
             FilterSection(result["facets"]) // Fill in the filter section based on response recieved
             DataSection_Product(inputSearch,pageno,result["response"]) // Fill in the data section based on response recieved
             // console.log(result["response"]["numberOfProducts"])
@@ -116,9 +117,11 @@ function DataSection_Product(inputSearch,pageeno,res) {
 
             div_element = document.createElement("div");
             div_element.setAttribute("class", "pro");
-
+            div_element.addEventListener("click", function () {
+                window.location.href = `./pdp.html?productId=${data[ind]["uniqueId"]}`
+              });
             img_element = document.createElement("img");
-            img_element.setAttribute("src", data[ind].productImage);
+            img_element.setAttribute("src",data[ind].productImage === undefined ? './No_Image_Available.jpg' : data[ind]["productImage"]);
             div_element.appendChild(img_element);
             div_name = document.createElement("div");
             div_name.setAttribute("class", "des");
@@ -137,7 +140,7 @@ function DataSection_Product(inputSearch,pageeno,res) {
             product_element.appendChild(div_element);
 
             // Add the pagination section with the particular pageno and query text
-            if (!document.getElementsByClassName("pagination")[0].hasChildNodes()) {
+            if (!document.getElementsByClassName("pagination")[0].hasChildNodes() && no_of_pages >1) {
               createPagination(inputSearch,pageeno,no_of_pages);
             }
         }
@@ -230,7 +233,7 @@ function FilterSection(facets){
     var filter = document.getElementById("sidebar");
     // Get the keys of the facets
     keys = Object.keys(facets);
-
+    console.log(keys);
     // Iterate through keys and add a title with diffeerent values as checkboxes.
     for (ind in keys) {
         var fieldName = document.createElement("div");
@@ -245,7 +248,73 @@ function FilterSection(facets){
                 ${facets[keys[ind]]["values"][ind2]} (${facets[keys[ind]]["values"][ind2+1]})<br>
             `
         }
+        
         // console.log(fieldName)
         filter.appendChild(fieldName);
     }
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+        // Get the values of all checked checkboxes
+        const checkedValues = Array.from(checkboxes)
+        .reduce((acc, checkbox) => {
+            if (checkbox.checked) {
+            // If the checkbox is checked, add its value to its group in the accumulator object
+                if (checkbox.name in acc) {
+                    acc[checkbox.name].push(checkbox.value);
+                } else {
+                    acc[checkbox.name] = [checkbox.value];
+                }
+            }
+            return acc;
+        }, {});
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          fetchValues(checkedValues);
+        }, 500);
+
+
+
+
+        });
+        });
+
+    
     }
+
+function fetchValues(checkedValues) {
+    console.log(checkedValues);
+    var facet_filter = [];
+    for (key of Object.keys(checkedValues)){
+        filter = ""
+        for (value of checkedValues[key]){
+            filter = `${key}:\"${decodeURIComponent(value)}\"`
+            facet_filter.push(filter);
+        }
+        
+    }
+    console.log(facet_filter);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+
+    if (urlParams.has('search')) {
+        var query = urlParams.get('search');
+        if (query !== "null"){
+            document.getElementById("search").value = query
+        } 
+        if (urlParams.has('pageno')){
+            var pageno = urlParams.get('pageno');
+            catalogueView(query, pageno,facet_filter)
+        }
+        else{
+            catalogueView(query,1,facet_filter);
+        }
+        
+    }
+    else{
+        catalogueView(null,1,facet_filter);
+    }
+}
+
+    
