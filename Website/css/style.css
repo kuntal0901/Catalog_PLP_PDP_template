@@ -5,9 +5,10 @@
     padding: 0;
     box-sizing: border-box;
     font-family: andale mono,monospace;
+    font-size:20px;
 }
 
-html {
+.html {
     scroll-behavior: smooth;
     color: black;
 
@@ -15,38 +16,33 @@ html {
 
 /* Global Styles */
 
-h1 {
+.heading-1 {
     font-size: 50px;
     line-height: 64px;
     color: #222;
 }
 
-h2 {
+.heading-2 {
     font-size: 46px;
     line-height: 54px;
     color: #222;
 }
 
-h4 {
-    font-size: 20px;
+.heading-3 {
     color: #222;
 }
 
-h6 {
+.heading-6 {
     font-weight: 700;
     font-size: 12px;
 }
 
-p {
+.paragraph {
     font-size: 20px;
     color: #282612;
     margin: 15px 0 20px 0;
 }
 
-label {
-    font-size: 15px;
-    color: #282612;
-}
 
 
 .section-p1 {
@@ -57,14 +53,11 @@ label {
     margin: 40px 0;
 }
 
-body {
-    width: 100%;
-    background: #e4ddf4;
-}
+
 
 
 /* Header Section*/
-#header {
+.header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -79,15 +72,23 @@ body {
     /* height: 90px; */
 }
 
-#navbar {
+.logo{
+    height: 90px;
+    width:90px;
+}
+
+.body-content {
+    width: 100%;
+    background: #e4ddf4;
+}
+
+.navbar {
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
     padding: 20px 0;
 }
-#navbar input {
-    display: inline-block;
-}
+
 
 /* Search box */
 .form {
@@ -101,7 +102,7 @@ body {
 
 }
 .form-input {
-
+    display: inline-block;
     height: 60px;
     width: 600px;
     padding-top: 5px;
@@ -119,7 +120,7 @@ body {
 } */
 
 /* Filter Listing */
-#sidebar {
+.sidebar {
     width: 15%;
     height:100%;
     position: fixed;
@@ -139,7 +140,7 @@ body {
 }
 
 /* Product Section */
-#content {
+.content {
     width: 85%;
     height: 100%;
     text-align: center;
@@ -196,12 +197,12 @@ body {
 .pro-container .pro .des h5 {
     padding-top: 7px;
     color: #2d2d2d;
-    font-size: 14px;
+    font-size: 20px;
 }
 
 .pro-container .pro .des h4 {
     padding-top: 7px;
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 700;
     color: #2d2d2d;
 }
@@ -212,8 +213,6 @@ body {
     display: block;
     margin: 0 auto;
 }
-
-
 .pagination{
     width:100%;
     display:flex;
@@ -228,31 +227,38 @@ body {
 }
 
 
-#content2{
+
+
+/* PDP page */
+.content-pdp{
    margin: 50px 50px;
    border: 2px solid black;
    padding: 20px 20px;
 }
 
-#basic{
+.basic{
     display:flex;
     flex:wrap; 
     padding-bottom: 20px; 
 }
-.basic_detail{
+.basic-image{
+  height:300px;
+  width:300px;  
+}
+.basic-detail{
     padding-left: 50px;
 }
-#group{
+.group{
     color: #282612;
 }
-#key_value{
+.pdp-detail{
     display:flex;
     flex:wrap; 
 }
-#key{
+.pdp-detail-key{
     width: 30%;
 }
-.value{
+.pdp-detail-value{
     width:60%;
 }
 .desc{

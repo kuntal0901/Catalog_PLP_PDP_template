@@ -1,27 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html class="html">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
     <title>PLP template</title>
-
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <!-- Our Custom CSS -->
-    <link rel="stylesheet" href="style.css">
-
-    <!-- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" /> -->
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 
-<body>
-    <section id="header">
-        <a href="#"><img src="./logo1.png" class="logo" height="90px" width="90px"
-                onclick="window.location.href = './index.html'"></img></a>
+<body class="body-content">
+    <section class="header">
+        <a href="javascript:void(0)"><img src="./images/logo1.png" class="logo" onclick="window.location.href = './index.html'"></img></a>
         <div class="navbar">
             <div class="form">
                 <input id="search" type="text" class="form-input" placeholder="Search Products">
@@ -29,34 +22,27 @@
 
         </div>
     </section>
-    <section id="filter-listing">
-
+    <section class="filter-listing">
         <!-- Sidebar  -->
-        <div id="sidebar">
+        <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h3>Filter</h3>
+                <h3 class="heading-3">Filter</h3>
             </div>
             <hr>
         </div>
-
         <!-- Page Content  -->
-        <div id="content">
+        <div class="content">
             <!-- Listing Products-->
-
-            <div class="pro-container">
+            <div class="pro-container" id="pro-container">
             </div>
             <!-- Pagination -->
-            <div class="pagecontainer section-p1" aria-label="Page navigation example">
-                <ul class="pagination pagination-lg">
+            <div class="page-container section-p1" aria-label="Page navigation example">
+                <ul class="pagination pagination-lg" id="pagination">
                 </ul>
             </div>
         </div>
-
     </section>
-
-
-
-    <script src="./script.js"></script>
+    <script src="./js/script.js"></script>
 </body>
 
 </html>

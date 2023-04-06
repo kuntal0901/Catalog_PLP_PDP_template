@@ -1,6 +1,6 @@
 
 // Function to perform the feetch request baseed on the parameters recieved
-function catalogueView(inputSearch,pageno,filter) {
+function catalogueView(inputSearch, pageno, filter) {
 
     var myHeaders = new Headers();
     myHeaders.append("Accept", "*/*");
@@ -37,9 +37,9 @@ function catalogueView(inputSearch,pageno,filter) {
     fetch("https://pim.unbxd.io/peppercorn/api/v2/catalogueView/6391b1448f93e67002742cef", requestOptions)
         .then(response => response.json())
         .then(result => {
-            console.log(result["facets"])
+            // console.log(result["facets"])
             FilterSection(result["facets"]) // Fill in the filter section based on response recieved
-            DataSection_Product(inputSearch,pageno,result["response"]) // Fill in the data section based on response recieved
+            DataSection_Product(inputSearch, pageno, result["response"]) // Fill in the data section based on response recieved
             // console.log(result["response"]["numberOfProducts"])
         })
         .catch(error => console.log('error', error));
@@ -78,37 +78,27 @@ searchInput.addEventListener("input", debounceSearch);
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
-if (urlParams.has('search')) {
-    var query = urlParams.get('search');
-    if (query !== "null"){
-        document.getElementById("search").value = query
-    } 
-    if (urlParams.has('pageno')){
-        var pageno = urlParams.get('pageno');
-        catalogueView(query, pageno,[])
-    }
-    else{
-        catalogueView(query,1,[]);
-    }
-    
-}
-else{
-    catalogueView(null,1,[]);
-}
+const query = urlParams.get('search') || '';
+const pageno = urlParams.get('pageno') || 1;
+document.getElementById("search").value = query
+catalogueView(query,pageno,[])
+
+
+
 
 // Function to fill the data section of the catalog
-function DataSection_Product(inputSearch,pageeno,res) {
+function DataSection_Product(inputSearch, pageeno, res) {
     if (res) {
         // Get the number of products sent in the response from the backend and calculate the no of pages
-        no_of_products = res["numberOfProducts"];
-        no_of_pages = Math.ceil(no_of_products / 20);
+        let no_of_products = res["numberOfProducts"];
+        let no_of_pages = Math.ceil(no_of_products / 20);
 
         // Get the pagination section where the pagination with given pages is created
-        ul_element = document.getElementsByClassName("pagination")[0];
+        let ul_element = document.getElementById("pagination");
         ul_element.innerHTML = "";
 
         // Get the product section where the products is going to be added
-        product_element = document.getElementsByClassName("pro-container")[0];
+        product_element = document.getElementById("pro-container");
         product_element.innerHTML = "";
 
         data = res["products"]
@@ -119,9 +109,9 @@ function DataSection_Product(inputSearch,pageeno,res) {
             div_element.setAttribute("class", "pro");
             div_element.addEventListener("click", function () {
                 window.location.href = `./pdp.html?productId=${data[ind]["uniqueId"]}`
-              });
+            });
             img_element = document.createElement("img");
-            img_element.setAttribute("src",data[ind].productImage === undefined ? './No_Image_Available.jpg' : data[ind]["productImage"]);
+            img_element.setAttribute("src", data[ind].productImage === undefined ? './images/No_Image_Available.jpg' : data[ind]["productImage"]);
             div_element.appendChild(img_element);
             div_name = document.createElement("div");
             div_name.setAttribute("class", "des");
@@ -140,8 +130,8 @@ function DataSection_Product(inputSearch,pageeno,res) {
             product_element.appendChild(div_element);
 
             // Add the pagination section with the particular pageno and query text
-            if (!document.getElementsByClassName("pagination")[0].hasChildNodes() && no_of_pages >1) {
-              createPagination(inputSearch,pageeno,no_of_pages);
+            if (!document.getElementById("pagination").hasChildNodes() && no_of_pages > 1) {
+                createPagination(inputSearch, pageeno, no_of_pages);
             }
         }
 
@@ -163,72 +153,72 @@ function SelectPage(el) {
 // Function to set multiple attribute to a given tag.
 function setMultipleAttributesonElement(elem, elemAttributes) {
     for (var name in elemAttributes) {
-      elem.setAttribute(name, elemAttributes[name]);
+        elem.setAttribute(name, elemAttributes[name]);
     }
-  }
+}
 
 
 // Function to creation pagination 
-function createPagination(query, pageno,pages) {
+function createPagination(query, pageno, pages) {
 
     var pageno = Number(pageno);
-  
+
     // Acess the pagination section for thhe pages to be added
-    ul_element = document.getElementsByClassName("pagination")[0];
+    ul_element = document.getElementById("pagination");
     list_element = document.createElement("li");
-  
-  
+
+
     (pageno === 1) ? list_element.setAttribute("class", "page-item disabled") : setMultipleAttributesonElement(list_element,
-         { "class": "page-item", "onclick": `window.location.href='./index.html?search=${query}&pageno=${pageno-1}'` });
-  
-  
+        { "class": "page-item", "onclick": `window.location.href='./index.html?search=${query}&pageno=${pageno - 1}'` });
+
+
     anchor_element = document.createElement("a");
     anchor_element.setAttribute("class", "page-link");
     anchor_element.innerHTML = "Prev";
     list_element.appendChild(anchor_element);
     ul_element.appendChild(list_element);
-  
+
     // Generate the max and min index of the current pageno (+5 and -5 from current page)
     (pageno - 5 <= 0) ? min_index = 1 : min_index = pageno - 5;
     (pageno + 5 >= pages) ? max_index = pages : max_index = pageno + 5;
-  
-  
+
+
     // Create the pages and add an extra active class to the current page
     for (var i = min_index; i <= max_index; i++) {
-      list_element = document.createElement("li");
-  
-      (i === pageno) ? list_element.setAttribute("class", "page-item active") : list_element.setAttribute("class", "page-item");
-  
-      anchor_element = document.createElement("a");
-      const elem_attributes = {
-        "class": "page-link",
-        "href": `./index.html?search=${query}&pageno=${i}`,
-        "onclick": 'SelectPage(this)',
-      }
-      setMultipleAttributesonElement(anchor_element, elem_attributes);
-      anchor_element.innerHTML = i;
-  
-      list_element.appendChild(anchor_element);
-      ul_element.appendChild(list_element);
+        list_element = document.createElement("li");
+
+        (i === pageno) ? list_element.setAttribute("class", "page-item active") : list_element.setAttribute("class", "page-item");
+
+        anchor_element = document.createElement("a");
+        const elem_attributes = {
+            "class": "page-link",
+            "href": `./index.html?search=${query}&pageno=${i}`,
+            "onclick": 'SelectPage(this)',
+        }
+        setMultipleAttributesonElement(anchor_element, elem_attributes);
+        anchor_element.innerHTML = i;
+
+        list_element.appendChild(anchor_element);
+        ul_element.appendChild(list_element);
     }
-  
-  
+
+
     list_element = document.createElement("li");
-  
+
     (pageno === pages) ? list_element.setAttribute("class", "page-item disabled") : setMultipleAttributesonElement(list_element,
-         { "class": "page-item", "onclick": `window.location.href='./index.html?search=${query}&pageno=${pageno+1}'` });
-  
+        { "class": "page-item", "onclick": `window.location.href='./index.html?search=${query}&pageno=${pageno + 1}'` });
+
     anchor_element = document.createElement("a");
     anchor_element.setAttribute("class", "page-link");
     anchor_element.innerHTML = "Next";
-  
+
     list_element.appendChild(anchor_element);
     ul_element.appendChild(list_element);
-  
-  }
+
+}
 
 // Function to fill in the filter section of the page
-function FilterSection(facets){
+function FilterSection(facets) {
     // Acess the sidebar id element
     var filter = document.getElementById("sidebar");
     // Get the keys of the facets
@@ -245,54 +235,50 @@ function FilterSection(facets){
 
             fieldName.innerHTML += `
                 <input type="checkbox" name = ${keys[ind]} value= ${encodeURIComponent(facets[keys[ind]]["values"][ind2])}> 
-                ${facets[keys[ind]]["values"][ind2]} (${facets[keys[ind]]["values"][ind2+1]})<br>
+                ${facets[keys[ind]]["values"][ind2]} (${facets[keys[ind]]["values"][ind2 + 1]})<br>
             `
         }
-        
+
         // console.log(fieldName)
         filter.appendChild(fieldName);
     }
     var checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
-    checkboxes.forEach(function(checkbox) {
-        checkbox.addEventListener('change', function() {
-        // Get the values of all checked checkboxes
-        const checkedValues = Array.from(checkboxes)
-        .reduce((acc, checkbox) => {
-            if (checkbox.checked) {
-            // If the checkbox is checked, add its value to its group in the accumulator object
-                if (checkbox.name in acc) {
-                    acc[checkbox.name].push(checkbox.value);
-                } else {
-                    acc[checkbox.name] = [checkbox.value];
-                }
-            }
-            return acc;
-        }, {});
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          fetchValues(checkedValues);
-        }, 500);
-
-
-
-
+    checkboxes.forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            // Get the values of all checked checkboxes
+            const checkedValues = Array.from(checkboxes)
+                .reduce((acc, checkbox) => {
+                    if (checkbox.checked) {
+                        // If the checkbox is checked, add its value to its group in the accumulator object
+                        if (checkbox.name in acc) {
+                            acc[checkbox.name].push(checkbox.value);
+                        } else {
+                            acc[checkbox.name] = [checkbox.value];
+                        }
+                    }
+                    return acc;
+                }, {});
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                fetchValues(checkedValues);
+            }, 500);
         });
-        });
+    });
 
-    
-    }
+
+}
 
 function fetchValues(checkedValues) {
     console.log(checkedValues);
     var facet_filter = [];
-    for (key of Object.keys(checkedValues)){
+    for (key of Object.keys(checkedValues)) {
         filter = ""
-        for (value of checkedValues[key]){
+        for (value of checkedValues[key]) {
             filter = `${key}:\"${decodeURIComponent(value)}\"`
             facet_filter.push(filter);
         }
-        
+
     }
     console.log(facet_filter);
     const queryString = window.location.search;
@@ -300,21 +286,20 @@ function fetchValues(checkedValues) {
 
     if (urlParams.has('search')) {
         var query = urlParams.get('search');
-        if (query !== "null"){
+        if (query !== "null") {
             document.getElementById("search").value = query
-        } 
-        if (urlParams.has('pageno')){
+        }
+        if (urlParams.has('pageno')) {
             var pageno = urlParams.get('pageno');
-            catalogueView(query, pageno,facet_filter)
+            catalogueView(query, pageno, facet_filter)
         }
-        else{
-            catalogueView(query,1,facet_filter);
+        else {
+            catalogueView(query, 1, facet_filter);
         }
-        
+
     }
-    else{
-        catalogueView(null,1,facet_filter);
+    else {
+        catalogueView(null, 1, facet_filter);
     }
 }
 
-    

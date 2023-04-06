@@ -32,9 +32,9 @@ function catalogueProduct(uniqueId,data){
     .then(response => response.json())
     .then(result => {
         // console.log(result["data"]["response"]["products"])
-        fill_table(data,result["data"]["response"]["products"][0])
+        pdpDetails(data,result["data"]["response"]["products"][0])
     })
-    .catch(error => console.log('error', error));
+    .catch(error => console.log('error2', error));
 }
 // catalogueProduct()
 
@@ -64,70 +64,80 @@ function catalogueMapping(uniqueId){
     fetch("https://pim.unbxd.io/api/v1/catalogueConfig/6391b1448f93e67002742cef", requestOptions)
       .then(response => response.json())
       .then(result => catalogueProduct(uniqueId,result["data"]["properties"]))
-      .catch(error => console.log('error', error));
+      .catch(error => alert('error1', error));
 }
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const Id = urlParams.get('productId');
-console.log(Id)
-catalogueMapping(Id)
+const id = urlParams.get('productId');
+if(id){
+    catalogueMapping(id)
+}
+else{
+    alert("Valid ProductId not mentioned in the product url")
+}
+    
 
 
-function fill_table(data,mappings){
+function pdpDetails(data,mappings){
     
     image = document.getElementById("productImage");
     title = document.getElementById("productTitle");
-    id = document.getElementById("productId");
+    productId = document.getElementById("productId");
+    
     image.src = mappings["productImage"] === undefined ? "./No_Image_Available.jpg" : mappings["productImage"][0];
     title.innerHTML = mappings["productName"];
-    id.innerHTML += " " + mappings["uniqueId"]; 
-    
-    field_mapping ={} 
-    for (i in data){
-        if (data[i]["field_id"] in mappings){
-            if(data[i]["group"] in field_mapping){
-                field_mapping[data[i]["group"]].push({"name":data[i]["name"],"value": mappings[data[i]["field_id"]],"data_type":data[i]["data_type"]})
-            // field_mapping[data[i]["name"]] = {"value": mappings[data[i]["field_id"]],"data_type":data[i]["data_type"],"group":data[i]["group"]};
+    productId.innerHTML += " " + mappings["uniqueId"]; 
+    fieldMapping ={} 
+    for (index in data){
+        let fieldId = data[index]["field_id"];
+        let fieldGroup = data[index]["group"];
+        let fieldName = data[index]["name"];
+        let fieldDatatype = data[index]["data_type"];
+        if (fieldId in mappings){
+            if(fieldGroup in fieldMapping){
+                fieldMapping[fieldGroup].push({"name":fieldName,"value": mappings[fieldId],"data_type":fieldDatatype})
             }
             else{
-            field_mapping[data[i]["group"]] = [{"name":data[i]["name"],"value": mappings[data[i]["field_id"]],"data_type":data[i]["data_type"]}]
+                fieldMapping[fieldGroup] = [{"name":fieldName,"value": mappings[fieldId],"data_type":fieldDatatype}]
             }
-        }
-        
+        }  
     }
     
     content = document.getElementById("additional_info");
-    for (key of Object.keys(field_mapping).sort()){
+    for (key of Object.keys(fieldMapping).sort()){
         content.innerHTML += `
             <hr />
-            <div id="group"><h3>${key}</h3></div>
+            <div class="group"><h3 class="heading-3">${key}</h3></div>
             <hr />
         `
-        for (i in field_mapping[key]){
-            if (field_mapping[key][i]["name"] === "descriptionHtml"){
+        for (index in fieldMapping[key]){
+            let dataName = fieldMapping[key][index]["name"];
+            let dataValue = fieldMapping[key][index]["value"];
+            let dataType = fieldMapping[key][index]["data_type"];
+            if (dataName === "descriptionHtml"){
                 content.innerHTML += `
-                    <div id="key_value">
-                        <div id="key"><p><b>${field_mapping[key][i]["name"]}</b> </p></div>
-                        <div class="value desc">${field_mapping[key][i]["value"]}</div>
+                    <div class="pdp-detail">
+                        <div class="pdp-detail-key"><p class="paragrraph"><b>${dataName}</b> </p></div>
+                        <div class="pdp-detail-value desc">${dataValue}</div>
                     <br />
                     </div>
                 `
             }
-            else if(field_mapping[key][i]["data_type"] === "image"){
+            else if(dataType=== "image"){
                 content.innerHTML += `
-                <div id="key_value">
-                    <div id="key"><p><b>${field_mapping[key][i]["name"]}</b> </p></div>
-                    <div class="value"><img src="${field_mapping[key][i]["value"]}" height=100px width=100px/></div>
+                <div class="pdp-detail">
+                    <div class="pdp-detail-key"><p class="paragrraph"><b>${dataName}</b> </p></div>
+                    <div class="pdp-detail-value"><img src="${dataValue}" height=100px width=100px/></div>
                 <br />
                 </div>
             `
             }
             else{
                 content.innerHTML += `
-                <div id="key_value">
-                    <div id="key"><p><b>${field_mapping[key][i]["name"]}</b> </p></div>
-                    <div class="value"><p>${field_mapping[key][i]["value"]}</p></div>
+                <div class="pdp-detail">
+                    <div class="pdp-detail-key"><p class="paragrraph"><b>${dataName}</b> </p></div>
+                    <div class="pdp-detail-value"><p class="paragrraph">${dataValue}</p></div>
                 <br />
                 </div>
             `
@@ -135,31 +145,4 @@ function fill_table(data,mappings){
 
         }
     }
-    // console.log(Object.keys(field_mapping).length,Object.keys(mappings).length);
-    // table = document.getElementsByClassName("tbody")[0];
-    // keys = Object.keys(field_mapping);
-
-    // for (key of Object.keys(field_mapping)){
-    //     tr = document.createElement("tr");
-    //     td_key = document.createElement("td");
-    //     td_value = document.createElement("td");
-    //     td_key.innerHTML = key;
-    //     // console.log(key,typeof(field_mapping[key]))
-    //     if (field_mapping[key]["data_type"] == "image"){
-    //         td_value.innerHTML = `<img src="${field_mapping[key]["value"]}" height="100px" width="100px"/>`
-    //     }
-    //     else{
-    //         td_value.innerHTML = field_mapping[key]["value"];
-    //     }
-        
-    //     tr.appendChild(td_key);
-    //     tr.appendChild(td_value);
-    //     table.appendChild(tr);
-    //     // table.innerHTML +=`
-    //     //     <tr>
-    //     //         <td>${key}</td>
-    //     //         <td>${field_mapping[key]}</td>
-    //     //     </tr>
-    //     // `
-    // }
 }
