@@ -1,6 +1,6 @@
 function catalogueProduct(uniqueId,data){
-    var myHeaders = new Headers();
-    myHeaders.append("Accept", "*/*");
+  const myHeaders = new Headers();
+  myHeaders.append("Accept", "*/*");
     myHeaders.append("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8");
     myHeaders.append("Connection", "keep-alive");
     myHeaders.append("Content-Type", "application/json");
@@ -31,12 +31,11 @@ function catalogueProduct(uniqueId,data){
     fetch("https://pim.unbxd.io/peppercorn/api/v2/catalogueProduct", requestOptions)
     .then(response => response.json())
     .then(result => {
-        // console.log(result["data"]["response"]["products"])
-        pdpDetails(data,result["data"]["response"]["products"][0])
+      // console.log(result["data"]["response"]["products"])
+      pdpDetails(data,result["data"]["response"]["products"][0])
     })
-    .catch(error => console.log('error2', error));
+    .catch(error => alert(error.message));
 }
-// catalogueProduct()
 
 function catalogueMapping(uniqueId){
     var myHeaders = new Headers();
@@ -63,8 +62,16 @@ function catalogueMapping(uniqueId){
       
     fetch("https://pim.unbxd.io/api/v1/catalogueConfig/6391b1448f93e67002742cef", requestOptions)
       .then(response => response.json())
-      .then(result => catalogueProduct(uniqueId,result["data"]["properties"]))
-      .catch(error => alert('error1', error));
+      .then(result => {
+        
+        const imgElement = document.getElementById("logo");
+        const image = result["data"]["catalog_logo_url"] ? result["data"]["catalog_logo_url"] : "../images/logo1.png";
+        imgElement.src = image;
+
+        catalogueProduct(uniqueId,result["data"]["properties"])
+      }
+      )
+      .catch(error => alert(error.message));
 }
 
 const queryString = window.location.search;
@@ -81,15 +88,15 @@ else{
 
 function pdpDetails(data,mappings){
     
-    image = document.getElementById("productImage");
-    title = document.getElementById("productTitle");
-    productId = document.getElementById("productId");
+    const imageElement = document.getElementById("productImage");
+    const titleElement = document.getElementById("productTitle");
+    const productIdElement = document.getElementById("productId");
     
-    image.src = mappings["productImage"] === undefined ? "./No_Image_Available.jpg" : mappings["productImage"][0];
-    title.innerHTML = mappings["productName"];
-    productId.innerHTML += " " + mappings["uniqueId"]; 
-    fieldMapping ={} 
-    for (index in data){
+    imageElement.src = mappings["productImage"] === undefined ? "./No_Image_Available.jpg" : mappings["productImage"][0];
+    titleElement.innerHTML = mappings["productName"];
+    productIdElement.innerHTML += " " + mappings["uniqueId"]; 
+    let fieldMapping ={} 
+    for (let index in data){
         let fieldId = data[index]["field_id"];
         let fieldGroup = data[index]["group"];
         let fieldName = data[index]["name"];
@@ -104,14 +111,14 @@ function pdpDetails(data,mappings){
         }  
     }
     
-    content = document.getElementById("additional_info");
-    for (key of Object.keys(fieldMapping).sort()){
+    let content = document.getElementById("additional_info");
+    for (let key of Object.keys(fieldMapping).sort()){
         content.innerHTML += `
             <hr />
             <div class="group"><h3 class="heading-3">${key}</h3></div>
             <hr />
         `
-        for (index in fieldMapping[key]){
+        for (let index in fieldMapping[key]){
             let dataName = fieldMapping[key][index]["name"];
             let dataValue = fieldMapping[key][index]["value"];
             let dataType = fieldMapping[key][index]["data_type"];
@@ -124,7 +131,7 @@ function pdpDetails(data,mappings){
                     </div>
                 `
             }
-            else if(dataType=== "image"){
+            else if(dataType=== "imageElement"){
                 content.innerHTML += `
                 <div class="pdp-detail">
                     <div class="pdp-detail-key"><p class="paragrraph"><b>${dataName}</b> </p></div>

@@ -136,7 +136,7 @@
     margin-bottom: 10px;
     margin-left:10px;
     overflow-y: auto;
-    border-radius: 20px;
+    /* border-radius: 20px; */
 }
 
 /* Product Section */
@@ -165,7 +165,7 @@
     position: relative;
 }
 
-.pro-container .pro {
+.pro {
     width: 23%;
     min-width: 250px;
     padding: 10px 12px;
@@ -186,7 +186,7 @@
 
 .pro-container  .pro img {
     width: 100%;
-    border-radius: 20px;
+    border-radius: 25px;
 }
 
 .pro-container  .pro .des {
