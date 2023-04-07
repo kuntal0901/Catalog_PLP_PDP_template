@@ -12,6 +12,20 @@ function SelectPage(el) {
   document.querySelector(el).parent().classList.add('active');
 }
 
+function safeTraverse(obj, paths = []) {
+  let val = obj;
+  let idx = 0;
+
+  while (idx < paths.length) {
+      if (!val) {
+          return null;
+      }
+      val = val[paths[idx]];
+      idx++;
+  }
+  return val === 0 ? '0' : val;
+}
+
 // Function to creation pagination
 function createPagination(query, pageno, pages) {
   const pageNo = Number(pageno);
@@ -98,15 +112,18 @@ function dataSection(inputSearch, page, res) {
         window.location.href = `./pdp.html?productId=${data[ind].uniqueId}`;
       });
       const imgElement = document.createElement('img');
+      imgElement.className = "pro-img"
       imgElement.setAttribute('src', data[ind].productImage === undefined ? '../images/No_Image_Available.jpg' : data[ind].productImage);
       divElement.appendChild(imgElement);
       const subdivElement = document.createElement('div');
       subdivElement.setAttribute('class', 'des');
 
       const h5Element = document.createElement('h5');
+      h5Element.className = "des-h5"
       h5Element.innerHTML = data[ind].productName;
 
       const h4Element = document.createElement('h4');
+      h4Element.className = "des-h4"
       h4Element.innerHTML = data[ind].uniqueId;
 
       subdivElement.appendChild(h5Element);
