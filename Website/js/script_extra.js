@@ -131,7 +131,7 @@ function pdpDetails(data,mappings){
                     </div>
                 `
             }
-            else if(dataType=== "imageElement"){
+            else if(dataType=== "image"){
                 content.innerHTML += `
                 <div class="pdp-detail">
                     <div class="pdp-detail-key"><p class="paragrraph"><b>${dataName}</b> </p></div>

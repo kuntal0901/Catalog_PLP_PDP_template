@@ -17,11 +17,14 @@
         <a href="javascript:void(0)"><img src="" id = "logo" class="logo" onclick="window.location.href = './index.html'"></img></a>
         <div class="navbar">
             <div class="form">
-                <input id="search" type="text" class="form-input" placeholder="Search Products">
+                <input id="search" type="text" class="form-input" placeholder="Looking for something specific?"  oninput="showClearButton()">
+                <button id="clear-button" style="display: none;" onclick="clearInput()"> x</button>
             </div>
         </div>
         
     </section>
+    <span class="arrow"></span>
+    <span class="arrow"></span>
     <section class="filter-listing">
         <!-- Sidebar  -->
         <div class="sidebar" id="sidebar">
@@ -33,8 +36,64 @@
         <!-- Page Content  -->
         <div class="content">
             <!-- Listing Products-->
-            <div class="pro-container" id="pro-container">
-            </div>
+                <div class="pro-container" id="pro-container">
+                    <div class="pro">
+                        <img src="../images/giphy.gif" class="pro-img" />
+                        <div class="des">
+                            <h5 class="des-h5"> Title</h5>
+                            <h4 class="des-h4"> Id</h4>
+                        </div>
+                    </div> 
+                    <div class="pro">
+                        <img src="../images/giphy.gif" class="pro-img"/>
+                        <div class="des">
+                            <h5 class="des-h5"> Title</h5>
+                            <h4 class="des-h4"> Id</h4>
+                        </div>
+                    </div> 
+                    <div class="pro">
+                        <img src="../images/giphy.gif" class="pro-img"/>
+                        <div class="des">
+                            <h5 class="des-h5"> Title</h5>
+                            <h4 class="des-h4"> Id</h4>
+                        </div>
+                    </div> 
+                    <div class="pro">
+                        <img src="../images/giphy.gif" class="pro-img"/>
+                        <div class="des">
+                            <h5 class="des-h5"> Title</h5>
+                            <h4 class="des-h4"> Id</h4>
+                        </div>
+                    </div> 
+                    <div class="pro">
+                        <img src="../images/giphy.gif" class="pro-img"/>
+                        <div class="des">
+                            <h5 class="des-h5"> Title</h5>
+                            <h4 class="des-h4"> Id</h4>
+                        </div>
+                    </div> 
+                    <div class="pro">
+                        <img src="../images/giphy.gif" class="pro-img"/>
+                        <div class="des">
+                            <h5 class="des-h5"> Title</h5>
+                            <h4 class="des-h4"> Id</h4>
+                        </div>
+                    </div> 
+                    <div class="pro">
+                        <img src="../images/giphy.gif" class="pro-img"/>
+                        <div class="des">
+                            <h5 class="des-h5"> Title</h5>
+                            <h4 class="des-h4"> Id</h4>
+                        </div>
+                    </div> 
+                    <div class="pro">
+                        <img src="../images/giphy.gif" class="pro-img"/>
+                        <div class="des">
+                            <h5 class="des-h5"> Title</h5>
+                            <h4 class="des-h4"> Id</h4>
+                        </div>
+                    </div> 
+                </div>
             <!-- Pagination -->
             <div class="page-container section-p1" aria-label="Page navigation example">
                 <ul class="pagination pagination-lg" id="pagination">

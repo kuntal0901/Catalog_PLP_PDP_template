@@ -63,7 +63,7 @@
     justify-content: space-between;
     width: 100%;
     padding: 20px 80px;
-    background: #943d24;
+    background: #FF5733;
     /* box-shadow: 0 5px 25px rgba(0,0,0,0.6); */
     z-index: 999;
     position: sticky;
@@ -77,9 +77,12 @@
     width:90px;
 }
 
+
+
+
 .body-content {
     width: 100%;
-    background: #e4ddf4;
+    background: #F0F0F0;
 }
 
 .navbar {
@@ -93,6 +96,7 @@
 /* Search box */
 .form {
     position: relative;
+    display: inline-block;
 }
 .form .fa-search {
     position: absolute;
@@ -108,11 +112,29 @@
     padding-top: 5px;
     text-indent: 40px;
     border-radius: 10px;
+    padding-right: 25px;
 }
 .form-input:focus {
 
     box-shadow: none;
     border: none;
+}
+.form-input::placeholder{
+    color:#333333;
+}
+#clear-button {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    z-index: 1;
+    background-color: #FF5733;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+
 }
 
 /* #filter-listing{
@@ -126,7 +148,7 @@
     position: fixed;
     /* min-width: 250px;
     max-width: 250px; */
-    background: #fffbf0;
+    background: #F0F0F0;
     color: rgb(0, 0, 0);
     padding-left: 20px;
     padding-right: 20px;
@@ -136,7 +158,13 @@
     margin-bottom: 10px;
     margin-left:10px;
     overflow-y: auto;
-    /* border-radius: 20px; */
+    border: 1px solid #28133A;
+    border-radius: 25px;
+}
+.display-name{
+    font-size: 20px;
+    font-weight: bold ;
+    
 }
 
 /* Product Section */
@@ -157,12 +185,14 @@
 .pro-container {
     /* display: block; */
     display: flex;
-    align-items: center;
+    /* align-items: center; */
     /* justify-content: space-evenly; */
     /* padding-right: 50px; */
+    justify-content: center;
     flex-wrap: wrap;
-    padding-top: 50px;
+    padding-top: 25px;
     position: relative;
+    align-items: strech;
 }
 
 .pro {
@@ -171,12 +201,14 @@
     padding: 10px 12px;
     border: 1px solid #28133A;
     border-radius: 25px;
+    border-top-width: 5px;
+    border-bottom-width:5px;
     cursor: pointer;
     box-shadow: 20px 20px 30px rgba(0, 0, 0, 0.02);
-    margin: 15px 15px;
+    margin: 16px 16px;
     transition: 0.2s ease;
     position: relative;
-    background: #fffbf0;
+    background: #F0F0F0;
 }
 
 .pro-container  .pro:hover {
@@ -197,6 +229,7 @@
     padding-top: 7px;
     color: #2d2d2d;
     font-size: 20px;
+    font-style: italic ;
 }
 
 .des-h4 {
@@ -204,6 +237,7 @@
     font-size: 20px;
     font-weight: 700;
     color: #2d2d2d;
+    font-style: italic ;
 }
 
   /* Pagination Section */
@@ -270,3 +304,4 @@
 .btn{
     margin-bottom: 20px;
 }
+

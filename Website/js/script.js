@@ -88,7 +88,7 @@ function createPagination(query, pageno, pages) {
 
 // Function to fill the data section of the catalog
 function dataSection(inputSearch, page, res) {
-  if (res) {
+  if (res.numberOfProducts > 0) {
     // Get the number of products sent in the response from the backend and calculate the no of page
     const { numberOfProducts } = res;
     const numberOfPages = Math.ceil(numberOfProducts / 20);
@@ -115,6 +115,7 @@ function dataSection(inputSearch, page, res) {
       imgElement.className = "pro-img"
       imgElement.setAttribute('src', data[ind].productImage === undefined ? '../images/No_Image_Available.jpg' : data[ind].productImage);
       divElement.appendChild(imgElement);
+
       const subdivElement = document.createElement('div');
       subdivElement.setAttribute('class', 'des');
 
@@ -265,8 +266,10 @@ function filterSection(facets) {
     const { displayName } = facets[facetKeys[i]];
     const { values } = facets[facetKeys[i]];
     facetDiv.innerHTML += `
-        <p>${displayName}</p>
+        <br>
+        <p class="display-name">${displayName}</p>
         <hr>
+        
         `;
 
     for (let j = 0; j < values.length; j += 2) {
@@ -338,6 +341,42 @@ function debounceSearch() {
 }
 // Add an event listener to the search input
 searchInput.addEventListener('input', debounceSearch);
+
+function showClearButton() {
+  var input = document.getElementById("search");
+  var clearButton = document.getElementById("clear-button");
+  if (input.value) {
+    clearButton.style.display = "flex";
+  } else {
+    clearButton.style.display = "none";
+  }
+  localStorage.setItem("my-input-value", input.value);
+  localStorage.setItem("clear-button-display", clearButton.style.display);
+}
+
+function clearInput() {
+  var input = document.getElementById("search");
+  input.value = "";
+  showClearButton();
+  performSearch();
+}
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+  var input = document.getElementById("search");
+  var clearButton = document.getElementById("clear-button");
+  var inputValue = localStorage.getItem("my-input-value");
+  var buttonDisplay = localStorage.getItem("clear-button-display");
+  if (inputValue) {
+    input.value = inputValue;
+  }
+  if (buttonDisplay) {
+    clearButton.style.display = buttonDisplay;
+  }
+});
+
+
+
+
 // Based on the url parameter perform the fetch request calling the Catalogue view function
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
