@@ -128,8 +128,8 @@
     right: 5px;
     transform: translateY(-50%);
     z-index: 1;
-    background-color: #FF5733;
-    color: white;
+    background-color: white;
+    color: #333333;
     border: none;
     border-radius: 50%;
     width: 25px;
