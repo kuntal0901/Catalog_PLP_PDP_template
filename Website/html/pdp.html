@@ -17,21 +17,45 @@
 
 <body class="body-content">
     <section class="header">
-        <a href="javascript:void(0)"><img src="" id ="logo" class="logo" onclick="window.location.href = './index.html'"></img></a>
+        <a href="javascript:void(0)" id="logo_url"><img src="" id ="logo" class="logo" onclick="window.location.href = './index.html'"></img></a>
     </section>
-    <section class="content-pdp">
+    <section id="loading">
+        <div class="loader">
+            <span>L</span>
+            <span>O</span>
+            <span>A</span>
+            <span>D</span>
+            <span>I</span>
+            <span>N</span>
+            <span>G</span>
+        </div>
+    </section>
+    <div id="myModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+      </div>
+    <section class="content-pdp" id="pdpcontent" >
+ 
         <button type="button" class="btn btn-secondary btn-lg btn-outline-dark" onclick= window.history.back()> <- Go back to Product Listing Page</button>
         <div id = "basic" class="basic">
-            <img id = "productImage" class = "basic-image" src="" ></img>
+            <!-- <img id = "productImage" class = "basic-image" src="" ></img> -->
+            <div id="slider" class="slider">
+
+                <button id="prev-btn" class="slider-btn prev">&#8249;</button>
+              <button id="next-btn" class="slider-btn next">&#8250;</button> 
+            </div>
             <div class="basic-detail">
-                <h3 class="heading-3" id="productTitle">Product Title</h3>
-                <p id="productId" class="paragraph">Product Id:</p>
+                <h3 class="heading-3 productTitle" id="productTitle"></h3>
+                <h4 class = "productId"id="productId">Product Id : </h4>
+
             </div>
 
         </div>
         <div id="additional_info">
         </div>
     </section>
-    
-    <script src="../js/script_extra.js"></script>
+    <footer>
+        <div class="catalog-footer"><img src="https://pim.unbxd.io/images/unbxdicon.png" height="28" alt="footer image"><p>© 2023 Unbxd Inc., All Rights Reserved.</p></div>
+    </footer>
+        <script src="../js/script_extra.js"></script>
 </body>

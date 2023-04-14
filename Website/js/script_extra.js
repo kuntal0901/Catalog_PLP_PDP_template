@@ -1,4 +1,4 @@
-function catalogueProduct(uniqueId,data){
+function catalogueProduct(catalogue_id,uniqueId,data){
   const myHeaders = new Headers();
   myHeaders.append("Accept", "*/*");
     myHeaders.append("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8");
@@ -17,7 +17,7 @@ function catalogueProduct(uniqueId,data){
     myHeaders.append("sec-ch-ua-platform", "\"macOS\"");
 
     var raw = JSON.stringify({
-    "catalogue_id": "6391b1448f93e67002742cef",
+    "catalogue_id": catalogue_id,
     "unique_id": uniqueId
     });
 
@@ -37,7 +37,7 @@ function catalogueProduct(uniqueId,data){
     .catch(error => alert(error.message));
 }
 
-function catalogueMapping(uniqueId){
+function catalogueMapping(catalogue_id,uniqueId){
     var myHeaders = new Headers();
     myHeaders.append("Accept", "*/*");
     myHeaders.append("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8");
@@ -60,7 +60,7 @@ function catalogueMapping(uniqueId){
         redirect: 'follow'
       };
       
-    fetch("https://pim.unbxd.io/api/v1/catalogueConfig/6391b1448f93e67002742cef", requestOptions)
+    fetch("https://pim.unbxd.io/api/v1/catalogueConfig/642a6751ae38fe17eaa2e37e", requestOptions)
       .then(response => response.json())
       .then(result => {
         
@@ -68,7 +68,7 @@ function catalogueMapping(uniqueId){
         const image = result["data"]["catalog_logo_url"] ? result["data"]["catalog_logo_url"] : "../images/logo1.png";
         imgElement.src = image;
 
-        catalogueProduct(uniqueId,result["data"]["properties"])
+        catalogueProduct(catalogue_id,uniqueId,result["data"]["properties"])
       }
       )
       .catch(error => alert(error.message));
@@ -76,9 +76,11 @@ function catalogueMapping(uniqueId){
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const id = urlParams.get('productId');
-if(id){
-    catalogueMapping(id)
+const id = urlParams.get('productId'); 
+const catalogue_id = urlParams.get('catalogueId');
+document.getElementById("logo_url").href =  `./index.html?catalogue_id=${catalogue_id}`;
+if(id && catalogue_id){
+    catalogueMapping(catalogue_id,id)
 }
 else{
     alert("Valid ProductId not mentioned in the product url")
@@ -87,30 +89,103 @@ else{
 
 
 function pdpDetails(data,mappings){
-    
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("pdpcontent").style.display = "block";
     const imageElement = document.getElementById("productImage");
     const titleElement = document.getElementById("productTitle");
     const productIdElement = document.getElementById("productId");
     
-    imageElement.src = mappings["productImage"] === undefined ? "./No_Image_Available.jpg" : mappings["productImage"][0];
+    // imageElement.src = mappings["productImage"] === undefined ? "./No_Image_Available.jpg" : mappings["productImage"][0];
+    // var images = mappings["productImage"] === undefined ? ["../images/No_Image_Available.jpg"] : mappings["productImage"];
+
+
+
+
     titleElement.innerHTML = mappings["productName"];
     productIdElement.innerHTML += " " + mappings["uniqueId"]; 
     let fieldMapping ={} 
+    var images = []
+    // console.log(mappings,data);
     for (let index in data){
         let fieldId = data[index]["field_id"];
         let fieldGroup = data[index]["group"];
         let fieldName = data[index]["name"];
         let fieldDatatype = data[index]["data_type"];
+        if  (fieldDatatype === "image" && mappings[fieldId] !== undefined){
+          images.push(mappings[fieldId][0])
+        }
         if (fieldId in mappings){
             if(fieldGroup in fieldMapping){
+    
                 fieldMapping[fieldGroup].push({"name":fieldName,"value": mappings[fieldId],"data_type":fieldDatatype})
             }
             else{
                 fieldMapping[fieldGroup] = [{"name":fieldName,"value": mappings[fieldId],"data_type":fieldDatatype}]
             }
         }  
+        // console.log(fieldMapping)
+    }
+    console.log(images)
+    var currentImageIndex = 0;
+    function updateSlider() {
+      var slider = document.getElementById("slider");
+      var image = new Image();
+      // var image = document.getElementById("pdp-image");
+      image.onload = function() {
+        slider.appendChild(image);
+        setTimeout(function() {
+          image.style.opacity = "1";
+        }, 100);
+      };
+      image.src = images[currentImageIndex];
+      image.className = "basic-image"
+      image.addEventListener("click", function() {
+        var modal = document.getElementById("myModal");
+        var modalImage = document.getElementById("modalImage");
+        modalImage.src = this.src;
+        modal.style.display = "block";
+      });
+      var prevButton = document.getElementById("prev-btn");
+      prevButton.addEventListener("click", prevImage);
+    
+      var nextButton = document.getElementById("next-btn");
+      nextButton.addEventListener("click", nextImage);
+    }
+
+    function prevImage() {
+      var slider = document.getElementById("slider");
+      var imagesCount = images.length;
+      var previousImageIndex = currentImageIndex;
+      currentImageIndex = (currentImageIndex - 1 + imagesCount) % imagesCount;
+      var previousImage = slider.querySelector("img");
+      previousImage.style.opacity = "0";
+      setTimeout(function() {
+        slider.removeChild(previousImage);
+        updateSlider();
+      }, 1000);
     }
     
+    function nextImage() {
+      var slider = document.getElementById("slider");
+      var imagesCount = images.length;
+      var previousImageIndex = currentImageIndex;
+      currentImageIndex = (currentImageIndex + 1) % imagesCount;
+      var previousImage = slider.querySelector("img");
+      previousImage.style.opacity = "0";
+      setTimeout(function() {
+        slider.removeChild(previousImage);
+        updateSlider();
+      }, 1000);
+    }
+    updateSlider();
+
+
+    var closeButton = document.querySelector(".close");
+    closeButton.addEventListener("click", function() {
+      var modal = document.getElementById("myModal");
+      modal.style.display = "none";
+    });
+    console.log(fieldMapping)
     let content = document.getElementById("additional_info");
     for (let key of Object.keys(fieldMapping).sort()){
         content.innerHTML += `
@@ -132,13 +207,20 @@ function pdpDetails(data,mappings){
                 `
             }
             else if(dataType=== "image"){
-                content.innerHTML += `
-                <div class="pdp-detail">
-                    <div class="pdp-detail-key"><p class="paragrraph"><b>${dataName}</b> </p></div>
-                    <div class="pdp-detail-value"><img src="${dataValue}" height=100px width=100px/></div>
-                <br />
-                </div>
-            `
+              image = ""
+              for (var i = 0; i < dataValue.length; i += 1) {
+                image += `<div class="pdp-detail-value "><img src="${dataValue[i]}" height=100px width=100px/></div>
+                <br />`
+              }
+              content.innerHTML += `
+              <div class="pdp-detail">
+                  <div class="pdp-detail-key "><p class="paragraph"><b>${dataName}</b> </p></div>
+                  ${image}
+                </div>`
+              
+              // content.innerHTML += `<br />
+              // </div>
+              //         </div>`
             }
             else{
                 content.innerHTML += `
@@ -153,3 +235,7 @@ function pdpDetails(data,mappings){
         }
     }
 }
+
+
+ 
+      

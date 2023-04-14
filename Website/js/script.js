@@ -88,11 +88,35 @@ function createPagination(query, pageno, pages) {
 
 // Function to fill the data section of the catalog
 function dataSection(inputSearch, page, res) {
+  // if(inputSearch !== ""){
+  //   document.getElementById("breadcrums").style.display = "block";
+  //   document.getElementById("total-products").innerHTML = `Number of products: <b>${res.numberOfProducts}</b>`;
+  //   document.getElementById("current-pageno").innerHTML = `Current page no: <b>${page}</b>`;
+  //   document.getElementById("search-results") = `Search results for <b>${inputSearch}</b>`;
+  // }
+  page = Number(page)
   if (res.numberOfProducts > 0) {
     // Get the number of products sent in the response from the backend and calculate the no of page
     const { numberOfProducts } = res;
     const numberOfPages = Math.ceil(numberOfProducts / 20);
-
+    console.log(numberOfPages)
+    if (numberOfProducts > 20){
+        if(page ===  1){
+          document.getElementById("next").style.display = "block";
+          document.getElementById("prev").style.display = "none";
+        }
+        else{
+          if (page === numberOfPages){
+            document.getElementById("prev").style.display = "block";
+            document.getElementById("next").style.display = "none";
+            }
+          else{
+            document.getElementById("prev").style.display = "block";
+            document.getElementById("next").style.display = "block";
+            }
+          }
+    }
+    
     // Get the pagination section where the pagination with given pages is created
     const paginationElement = document.getElementById('pagination');
     paginationElement.innerHTML = '';
@@ -109,25 +133,28 @@ function dataSection(inputSearch, page, res) {
       const divElement = document.createElement('div');
       divElement.setAttribute('class', 'pro');
       divElement.addEventListener('click', () => {
-        window.location.href = `./pdp.html?productId=${data[ind].uniqueId}`;
+        window.location.href = `./pdp.html?catalogueId=${catalogue_id}&productId=${data[ind].uniqueId}`;
       });
       const imgElement = document.createElement('img');
       imgElement.className = "pro-img"
-      imgElement.setAttribute('src', data[ind].productImage === undefined ? '../images/No_Image_Available.jpg' : data[ind].productImage);
+      console.log(data[ind].productImage)
+      imgElement.setAttribute('src', data[ind].productImage === undefined ? '../images/No_Image_Available.jpg' : data[ind].productImage[0]);
       divElement.appendChild(imgElement);
 
       const subdivElement = document.createElement('div');
       subdivElement.setAttribute('class', 'des');
-
-      const h5Element = document.createElement('h5');
-      h5Element.className = "des-h5"
-      h5Element.innerHTML = data[ind].productName;
+      if(data[ind].productName !== undefined){
+        const h5Element = document.createElement('h5');
+        h5Element.className = "des-h5"
+        h5Element.innerHTML = data[ind].productName;
+        subdivElement.appendChild(h5Element);
+      }
 
       const h4Element = document.createElement('h4');
       h4Element.className = "des-h4"
       h4Element.innerHTML = data[ind].uniqueId;
 
-      subdivElement.appendChild(h5Element);
+      
       subdivElement.appendChild(h4Element);
       divElement.appendChild(subdivElement);
 
@@ -143,7 +170,7 @@ function dataSection(inputSearch, page, res) {
   }
 }
 
-function catalogueMapping(){
+function catalogueMapping(catalogue_id){
   var myHeaders = new Headers();
   myHeaders.append("Accept", "*/*");
   myHeaders.append("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8");
@@ -166,7 +193,7 @@ function catalogueMapping(){
       redirect: 'follow'
     };
     
-  fetch("https://pim.unbxd.io/api/v1/catalogueConfig/6391b1448f93e67002742cef", requestOptions)
+  fetch(`https://pim.unbxd.io/api/v1/catalogueConfig/${catalogue_id}`, requestOptions)
     .then(response => response.json())
     .then(result => {
       const imgElement = document.getElementById("logo");
@@ -178,7 +205,7 @@ function catalogueMapping(){
 
 
 // Function to perform the feetch request baseed on the parameters recieved
-function catalogueView(inputSearch, page, filter) {
+function catalogueView(catalogueid,inputSearch, page, filter) {
   const myHeaders = new Headers();
   myHeaders.append('Accept', '*/*');
   myHeaders.append('Accept-Language', 'en-GB,en-US;q=0.9,en;q=0.8');
@@ -209,13 +236,20 @@ function catalogueView(inputSearch, page, filter) {
     redirect: 'follow',
   };
   // console.log(inputSearch,pageno,filter)
-  fetch('https://pim.unbxd.io/peppercorn/api/v2/catalogueView/6391b1448f93e67002742cef', requestOptions)
+  fetch(`https://pim.unbxd.io/peppercorn/api/v2/catalogueView/${catalogueid}`, requestOptions)
     .then((response) => response.json())
     .then((result) => {
       // console.log(result["facets"])
       // Fill in the filter section based on response recieved
       // eslint-disable-next-line no-use-before-define
-      filterSection(result.facets);
+      console.log(result.facets);
+      if (result.facets){
+        filterSection(result.facets);
+      }
+      // else{
+      //   document.getElementById("sidebar").style.display="none";
+      //   document.getElementById("content").style.marginLeft="0";
+      // }
       // Fill in the data section based on response recieved
       dataSection(inputSearch, page, result.response);
       // console.log(result["response"]["numberOfProducts"])
@@ -224,32 +258,80 @@ function catalogueView(inputSearch, page, filter) {
     .catch((error) => console.log('error', error));
 }
 
-function fetchValues(checkedValues) {
+function fetchValues(catalogueid,search,pageno,checkedValues) {
   //   console.log(checkedValues);
+  document.getElementById("pro-container").innerHTML =  `
+    <div class="pro">
+    <img src="../images/giphy.gif" class="pro-img" />
+    <div class="des">
+        <h5 class="des-h5"> Title</h5>
+        <h4 class="des-h4"> Id</h4>
+    </div>
+    </div> 
+    <div class="pro">
+  <img src="../images/giphy.gif" class="pro-img"/>
+  <div class="des">
+      <h5 class="des-h5"> Title</h5>
+      <h4 class="des-h4"> Id</h4>
+  </div>
+  </div> 
+  <div class="pro">
+    <img src="../images/giphy.gif" class="pro-img"/>
+    <div class="des">
+        <h5 class="des-h5"> Title</h5>
+        <h4 class="des-h4"> Id</h4>
+    </div>
+  </div> 
+  <div class="pro">
+    <img src="../images/giphy.gif" class="pro-img"/>
+    <div class="des">
+        <h5 class="des-h5"> Title</h5>
+        <h4 class="des-h4"> Id</h4>
+    </div>
+  </div> 
+  <div class="pro">
+    <img src="../images/giphy.gif" class="pro-img"/>
+    <div class="des">
+        <h5 class="des-h5"> Title</h5>
+        <h4 class="des-h4"> Id</h4>
+    </div>
+  </div> 
+  <div class="pro">
+    <img src="../images/giphy.gif" class="pro-img"/>
+    <div class="des">
+        <h5 class="des-h5"> Title</h5>
+        <h4 class="des-h4"> Id</h4>
+    </div>
+  </div> 
+  <div class="pro">
+    <img src="../images/giphy.gif" class="pro-img"/>
+    <div class="des">
+        <h5 class="des-h5"> Title</h5>
+        <h4 class="des-h4"> Id</h4>
+    </div>
+  </div> 
+  <div class="pro">
+    <img src="../images/giphy.gif" class="pro-img"/>
+    <div class="des">
+        <h5 class="des-h5"> Title</h5>
+        <h4 class="des-h4"> Id</h4>
+    </div>
+  </div> 
+  `
+
+  checkedValues = JSON.parse(localStorage.getItem('checkboxState'));
   const facetFilter = [];
-  Object.keys(checkedValues).forEach((key) => {
-    checkedValues[key].forEach((value) => {
-      const filter = `${key}:"${decodeURIComponent(value)}"`;
-      facetFilter.push(filter);
+    if (checkedValues !==null){
+      Object.keys(checkedValues).forEach((key) => {
+      checkedValues[key].forEach((value) => {
+        const filter = `${key}:"${decodeURIComponent(value)}"`;
+        facetFilter.push(filter);
+      });
     });
-  });
-  // console.log(facetFilter);
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  if (urlParams.has('search')) {
-    const query = urlParams.get('search');
-    if (query !== 'null') {
-      document.getElementById('search').value = query;
-    }
-    if (urlParams.has('pageno')) {
-      const pageno = urlParams.get('pageno');
-      catalogueView(query, pageno, facetFilter);
-    } else {
-      catalogueView(query, 1, facetFilter);
-    }
-  } else {
-    catalogueView(null, 1, facetFilter);
   }
+  
+  catalogueView(catalogueid,search,pageno,facetFilter)
+  // console.log(facetFilter);
 }
 
 // Function to fill in the filter section of the page
@@ -260,12 +342,14 @@ function filterSection(facets) {
   // eslint-disable-next-line no-undef
   // Iterate through keys and add a title with diffeerent values as checkboxes.
   const facetKeys = Object.keys(facets);
-
-  for (let i = 0; i < facetKeys.length; i += 1) {
-    const facetDiv = document.createElement('div');
+  const facetDiv = document.getElementById('sidebar-body');
+  facetDiv.innerHTML = "";
+  for (let i = 0; i < facetKeys.length ; i += 1) {
+    
     const { displayName } = facets[facetKeys[i]];
     const { values } = facets[facetKeys[i]];
-    facetDiv.innerHTML += `
+    if(values.length > 0){
+        facetDiv.innerHTML += `
         <br>
         <p class="display-name">${displayName}</p>
         <hr>
@@ -288,10 +372,18 @@ function filterSection(facets) {
       facetDiv.appendChild(document.createElement('br'));
     }
     filter.appendChild(facetDiv);
+    }
+
   }
+  
 
   const checkboxes = document.querySelectorAll('input[type="checkbox"].filter');
+  const storedState = JSON.parse(localStorage.getItem('checkboxState'));
+
   checkboxes.forEach((checkbox) => {
+    if (storedState && storedState[checkbox.name] && storedState[checkbox.name].includes(checkbox.value)) {
+      checkbox.checked = true;
+    }
     checkbox.addEventListener('change', () => {
       // Get the values of all checked checkboxes
       const checkedValues = Array.from(checkboxes)
@@ -304,13 +396,20 @@ function filterSection(facets) {
             } else {
               acc[checkbox.name] = [checkbox.value];
             }
+          }else {
+            // If the checkbox is unchecked, remove its value from the accumulator object
+            if (checkbox.name in acc) {
+              acc[checkbox.name] = acc[checkbox.name].filter((value) => value !== checkbox.value);
+            }
           }
           return acc;
         }, {});
+      console.log(checkedValues)
+      localStorage.setItem('checkboxState', JSON.stringify(checkedValues));
       let timeoutId;
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
-        fetchValues(checkedValues);
+        fetchValues();
       }, 500);
     });
   });
@@ -328,7 +427,7 @@ let timeoutId;
 function performSearch() {
   const searchValue = searchInput.value;
   // Perform the search here with the searchValue
-  window.location.href = `./index.html?search=${searchValue}`;
+  window.location.href = `./index.html?catalogue_id=${catalogue_id}&search=${searchValue}`;
 }
 // Function to debounce the search function
 function debounceSearch() {
@@ -376,13 +475,39 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
-
-// Based on the url parameter perform the fetch request calling the Catalogue view function
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
 const query = urlParams.get('search') || '';
 const pageno = urlParams.get('pageno') || 1;
+const catalogue_id = urlParams.get('catalogue_id');
 document.getElementById('search').value = query;
-catalogueMapping();
-catalogueView(query, pageno, []);
+
+catalogueMapping(catalogue_id);
+// catalogueView(query, pageno,[]);
+
+fetchValues(catalogue_id,query,pageno,[]);
+
+document.getElementById("logo_url").href =  `./index.html?catalogue_id=${catalogue_id}`;
+
+
+function prevpage(){
+  let url = new URL(window.location.href);
+  const urlParams = new URLSearchParams(url.search);
+  const pageno = Number(urlParams.get('pageno')) || 1;
+  
+  urlParams.set('pageno', pageno-1);
+  url.search = urlParams.toString();
+  window.location.href = url.toString();
+}
+// document.getElementById("prev-btn").addEventListener("click",prevpage())
+function nextpage(){
+  let url = new URL(window.location.href);
+  const urlParams = new URLSearchParams(url.search);
+  const pageno = Number(urlParams.get('pageno')) || 1;
+  
+  urlParams.set('pageno', pageno+1);
+  url.search = urlParams.toString();
+
+  window.location.href = url.toString();
+}

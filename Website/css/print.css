@@ -1,0 +1,27 @@
+@media print {
+    @page {
+        margin-top: 100mm; /* Change the value to the desired size */
+      }
+    .header  {
+        page-break-before: always;
+        
+      }
+    .pro{
+        page-break-inside: avoid;
+    }
+    .sidebar{
+        width:0%;
+        display: none;
+    }
+    .arrow-btn{
+        display:none;
+    }
+    .content{
+        width:100%;
+        margin:0;
+    }
+    .pro{
+        padding-bottom: 36px;
+    }
+  }
+  

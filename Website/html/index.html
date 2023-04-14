@@ -10,88 +10,51 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <!-- Our Custom CSS -->
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" type="text/css" href="../css/print.css" media="print">
+
 </head>
 
 <body class="body-content">
     <section class="header">
-        <a href="javascript:void(0)"><img src="" id = "logo" class="logo" onclick="window.location.href = './index.html'"></img></a>
+        <a href="javascript:void(0)" id="logo_url"><img src="" id = "logo" class="logo" ></img></a>
         <div class="navbar">
             <div class="form">
-                <input id="search" type="text" class="form-input" placeholder="Looking for something specific?"  oninput="showClearButton()">
+                <input id="search" type="text" class="form-input" placeholder="Find what you're looking for..."  oninput="showClearButton()">
                 <button id="clear-button" style="display: none;" onclick="clearInput()"> x</button>
             </div>
         </div>
         
     </section>
     <section class="filter-listing">
+
+        
         <!-- Sidebar  -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <h3 class="heading-3">Filter</h3>
             </div>
+            <div id="sidebar-body">
+            </div>
             <hr>
         </div>
         <!-- Page Content  -->
-        <div class="content">
+        <div id="breadcrums">
+            <div id="basic-details">
+                <h6 id="total-products"></h6>
+                <h6 id="current-pageno">Current page no: <b>1</b></h6>
+            </div>
+            <div id="search-results">
+                
+            </div>
+        </div>
+        <div class="content" id="content">
+
             <!-- Listing Products-->
                 <div class="pro-container" id="pro-container">
-                    <div class="pro">
-                        <img src="../images/giphy.gif" class="pro-img" />
-                        <div class="des">
-                            <h5 class="des-h5"> Title</h5>
-                            <h4 class="des-h4"> Id</h4>
-                        </div>
-                    </div> 
-                    <div class="pro">
-                        <img src="../images/giphy.gif" class="pro-img"/>
-                        <div class="des">
-                            <h5 class="des-h5"> Title</h5>
-                            <h4 class="des-h4"> Id</h4>
-                        </div>
-                    </div> 
-                    <div class="pro">
-                        <img src="../images/giphy.gif" class="pro-img"/>
-                        <div class="des">
-                            <h5 class="des-h5"> Title</h5>
-                            <h4 class="des-h4"> Id</h4>
-                        </div>
-                    </div> 
-                    <div class="pro">
-                        <img src="../images/giphy.gif" class="pro-img"/>
-                        <div class="des">
-                            <h5 class="des-h5"> Title</h5>
-                            <h4 class="des-h4"> Id</h4>
-                        </div>
-                    </div> 
-                    <div class="pro">
-                        <img src="../images/giphy.gif" class="pro-img"/>
-                        <div class="des">
-                            <h5 class="des-h5"> Title</h5>
-                            <h4 class="des-h4"> Id</h4>
-                        </div>
-                    </div> 
-                    <div class="pro">
-                        <img src="../images/giphy.gif" class="pro-img"/>
-                        <div class="des">
-                            <h5 class="des-h5"> Title</h5>
-                            <h4 class="des-h4"> Id</h4>
-                        </div>
-                    </div> 
-                    <div class="pro">
-                        <img src="../images/giphy.gif" class="pro-img"/>
-                        <div class="des">
-                            <h5 class="des-h5"> Title</h5>
-                            <h4 class="des-h4"> Id</h4>
-                        </div>
-                    </div> 
-                    <div class="pro">
-                        <img src="../images/giphy.gif" class="pro-img"/>
-                        <div class="des">
-                            <h5 class="des-h5"> Title</h5>
-                            <h4 class="des-h4"> Id</h4>
-                        </div>
-                    </div> 
+
                 </div>
+            <button class="arrow-btn prev-btn" id="prev" onclick = "prevpage()">&#8249;</button>
+            <button class="arrow-btn next-btn" id="next" onclick="nextpage()">&#8250;</button>
             <!-- Pagination -->
             <div class="page-container section-p1" aria-label="Page navigation example">
                 <ul class="pagination pagination-lg" id="pagination">
@@ -99,7 +62,10 @@
             </div>
         </div>
     </section>
+
     <script src="../js/script.js"></script>
 </body>
-
+<footer>
+    <div class="catalog-footer"><img src="https://pim.unbxd.io/images/unbxdicon.png" height="28" alt="footer image"><p>© 2023 Unbxd Inc., All Rights Reserved.</p></div>
+</footer>
 </html>
