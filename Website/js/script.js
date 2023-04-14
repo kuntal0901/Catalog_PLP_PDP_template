@@ -116,6 +116,9 @@ function dataSection(inputSearch, page, res) {
             }
           }
     }
+    else{
+      
+    }
     
     // Get the pagination section where the pagination with given pages is created
     const paginationElement = document.getElementById('pagination');
@@ -198,6 +201,7 @@ function catalogueMapping(catalogue_id){
     .then(result => {
       const imgElement = document.getElementById("logo");
       const image = result["data"]["catalog_logo_url"] ? result["data"]["catalog_logo_url"] : "../images/logo1.png";
+      console.log(image);
       imgElement.src = image;
     })
     .catch(error => alert(error.message));
@@ -330,8 +334,8 @@ function fetchValues(catalogueid,search,pageno,checkedValues) {
     });
   }
   
-  catalogueView(catalogueid,search,pageno,facetFilter)
-  // console.log(facetFilter);
+  catalogueView(catalogue_id,query,pageno,facetFilter)
+  // console.log(catalogueid,search,pageno,facetFilter);
 }
 
 // Function to fill in the filter section of the page
@@ -352,7 +356,7 @@ function filterSection(facets) {
         facetDiv.innerHTML += `
         <br>
         <p class="display-name">${displayName}</p>
-        <hr>
+        <hr style="border: 2px solid  #A9A9A9">
         
         `;
 
@@ -481,6 +485,7 @@ const urlParams = new URLSearchParams(queryString);
 const query = urlParams.get('search') || '';
 const pageno = urlParams.get('pageno') || 1;
 const catalogue_id = urlParams.get('catalogue_id');
+console.log(query);
 document.getElementById('search').value = query;
 
 catalogueMapping(catalogue_id);

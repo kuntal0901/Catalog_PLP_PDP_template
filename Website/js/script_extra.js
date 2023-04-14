@@ -60,7 +60,7 @@ function catalogueMapping(catalogue_id,uniqueId){
         redirect: 'follow'
       };
       
-    fetch("https://pim.unbxd.io/api/v1/catalogueConfig/642a6751ae38fe17eaa2e37e", requestOptions)
+    fetch(`https://pim.unbxd.io/api/v1/catalogueConfig/${catalogue_id}`, requestOptions)
       .then(response => response.json())
       .then(result => {
         
@@ -112,7 +112,9 @@ function pdpDetails(data,mappings){
         let fieldName = data[index]["name"];
         let fieldDatatype = data[index]["data_type"];
         if  (fieldDatatype === "image" && mappings[fieldId] !== undefined){
-          images.push(mappings[fieldId][0])
+          for(let i=0 ;i <mappings[fieldId].length ;i++){
+            images.push(mappings[fieldId][i])
+          }
         }
         if (fieldId in mappings){
             if(fieldGroup in fieldMapping){
@@ -189,7 +191,6 @@ function pdpDetails(data,mappings){
     let content = document.getElementById("additional_info");
     for (let key of Object.keys(fieldMapping).sort()){
         content.innerHTML += `
-            <hr />
             <div class="group"><h3 class="heading-3">${key}</h3></div>
             <hr />
         `
@@ -209,13 +210,15 @@ function pdpDetails(data,mappings){
             else if(dataType=== "image"){
               image = ""
               for (var i = 0; i < dataValue.length; i += 1) {
-                image += `<div class="pdp-detail-value "><img src="${dataValue[i]}" height=100px width=100px/></div>
+                image += `<img src="${dataValue[i]}" height=100px width=100px class="pdp-image"/>
                 <br />`
               }
               content.innerHTML += `
               <div class="pdp-detail">
                   <div class="pdp-detail-key "><p class="paragraph"><b>${dataName}</b> </p></div>
+                  <div class="pdp-detail-value pdp-detail-image">
                   ${image}
+                  </div>
                 </div>`
               
               // content.innerHTML += `<br />
